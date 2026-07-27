@@ -1,0 +1,16 @@
+name: Evening Reminder
+
+on:
+  schedule:
+    - cron: "0 18 * * *"
+  workflow_dispatch:
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger missed-day check
+        run: |
+          curl -sf -X POST "${{ secrets.APP_URL }}/api/cron/check-missed" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json"

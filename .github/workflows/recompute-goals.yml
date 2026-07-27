@@ -1,0 +1,16 @@
+name: Recompute Goals
+
+on:
+  schedule:
+    - cron: "30 1 * * *"
+  workflow_dispatch:
+
+jobs:
+  recompute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger goal recompute
+        run: |
+          curl -sf -X POST "${{ secrets.APP_URL }}/api/cron/recompute-goals" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json"

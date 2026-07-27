@@ -1,0 +1,16 @@
+name: Morning Suggest
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  suggest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger AI suggestions
+        run: |
+          curl -sf -X POST "${{ secrets.APP_URL }}/api/cron/suggest" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json"
