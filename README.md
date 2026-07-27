@@ -200,6 +200,7 @@ lib/
   system-design/   Editions, practice, feedback
 drizzle/           SQL migrations
 scripts/           db:check, activity backfill
+proxy.ts           Supabase session refresh + auth redirects (Next.js 16)
 emails/            React Email templates
 ```
 
@@ -217,6 +218,7 @@ emails/            React Email templates
 | `Failed query` / ECIRCUITBREAKER on profiles | Fix `DATABASE_URL` — run `pnpm db:check` |
 | No AI suggestions | Set `GEMINI_API_KEY`; configure LeetCode username in Settings |
 | Hydration warning `cz-shortcut-listen` | Browser extension injecting DOM attrs — safe to ignore or test incognito |
+| Middleware / proxy invocation failed on Vercel | Ensure `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set in Vercel env; app uses `proxy.ts` (not `middleware.ts`) on Next.js 16 |
 | `/sw.js` 404 | No service worker registered — expected |
 | Slow LeetCode sync | LeetCode API + per-submission DB upserts; normal for first sync |
 
