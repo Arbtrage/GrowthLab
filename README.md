@@ -200,16 +200,18 @@ lib/
   system-design/   Editions, practice, feedback
 drizzle/           SQL migrations
 scripts/           db:check, activity backfill
-proxy.ts           Supabase session refresh + auth redirects (Next.js 16)
 emails/            React Email templates
 ```
 
 ## Deployment (Vercel)
 
-1. Import the repo and set all environment variables from `.env.example`
-2. Set `APP_URL` to your production domain
-3. Add `CRON_SECRET` and configure GitHub Actions secrets to match
-4. Ensure both SQL migrations have been applied to production Supabase
+1. Import the repo and set **Framework Preset** to **Next.js** (not "Other")
+2. Set all environment variables from `.env.example`
+3. Set `APP_URL` to your production domain
+4. Add `CRON_SECRET` and configure GitHub Actions secrets to match
+5. Ensure both SQL migrations have been applied to production Supabase
+
+Auth is enforced in server layouts (`app/(platform)/layout.tsx` redirects to login; `app/(auth)/layout.tsx` redirects signed-in users to dashboard). There is no Edge proxy/middleware — this avoids Vercel `ReferenceError: __dirname is not defined` from the Edge bundler.
 
 ## Troubleshooting
 
@@ -218,7 +220,7 @@ emails/            React Email templates
 | `Failed query` / ECIRCUITBREAKER on profiles | Fix `DATABASE_URL` — run `pnpm db:check` |
 | No AI suggestions | Set `GEMINI_API_KEY`; configure LeetCode username in Settings |
 | Hydration warning `cz-shortcut-listen` | Browser extension injecting DOM attrs — safe to ignore or test incognito |
-| Middleware / proxy invocation failed on Vercel | Ensure `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set in Vercel env; app uses `proxy.ts` (not `middleware.ts`) on Next.js 16 |
+| Middleware / proxy invocation failed on Vercel | Set Vercel **Framework Preset** to **Next.js** (not Other). Auth runs in server layouts, not Edge proxy — avoids `__dirname` errors from `next/server` on Edge |
 | `/sw.js` 404 | No service worker registered — expected |
 | Slow LeetCode sync | LeetCode API + per-submission DB upserts; normal for first sync |
 
